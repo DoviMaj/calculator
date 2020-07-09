@@ -78,12 +78,6 @@ function handleOperatorInput(value){
   }
   values = [];
   handleDisplay();
-  console.log(`values: ${values}`);
-  console.log(`firstValue: ${firstValue}`);
-  console.log(`secondValue: ${secondValue}`)
-  console.log(`operatorToggled: ${operatorToggled}`);
-  console.log(`result: ${result}`)
-  console.log(`displayOperation: ${displayOperation}`)
 }
 
 function handleNumberInput(inputValue){
@@ -108,13 +102,6 @@ function handleNumberInput(inputValue){
     handleValues()
   } 
   handleDisplay()
-  console.log(`values: ${values}`);
-  console.log(`firstValue: ${firstValue}`);
-  console.log(`secondValue: ${secondValue}`)
-  console.log(`operatorToggled: ${operatorToggled}`);
-  console.log(`result: ${result}`)
-  console.log(`displayOperation: ${displayOperation}`)
-  console.log(`dotToggled: ${dotToggled}`)
 }
 
 let ul = document.querySelector('ul');
@@ -142,7 +129,6 @@ ul.childNodes.forEach((li) => {
 })
 
 function handleNegative(){
-  debugger
   if(displayOperation[0] !== '-' && !operatorToggled){
     firstValue = - firstValue;
     displayOperation.unshift('-')
@@ -165,13 +151,8 @@ function handleClear(){
   secondValue = '';
   result = '';
   handleDisplay();
-  console.log(`values: ${values}`)
-  console.log(`firstValue: ${firstValue}`);
-  console.log(`secondValue: ${secondValue}`);
-  console.log(`operatorToggled: ${operatorToggled}`);
-  console.log(`result: ${result}`)
-  console.log(`displayOperation: ${displayOperation}`)
 }
+
 function handleDot(value){
   if(!operatorToggled){
     if(!firstValue.includes('.')){
@@ -181,7 +162,6 @@ function handleDot(value){
     }
   }
   if(operatorToggled){
-          debugger
     if(!secondValue.includes('.')){
       if((secondValue != '')){
         displayOperation.pop()
@@ -195,28 +175,22 @@ function handleRemove(){
   if(displayOperation.length === 1){
     handleClear()
   }
-   values.pop();
-        if(!operatorToggled){
-          firstValue = firstValue.slice(0, -1);
-          handleDisplay();
-        }
-        if(operatorToggled){
-          displayOperation = displayOperation
-            .map((i, index) => (index === displayOperation.length -1)? 
-                i.slice(0, -1): i)
-          if(displayOperation[displayOperation.length -1] === ''){
-            displayOperation.pop()
-          }
-          secondValue = secondValue.slice(0, -1);
-          handleValues();  
-          handleDisplay();
-        }
-        console.log(`values: ${values}`)
-      console.log(`firstValue: ${firstValue}`);
-      console.log(`secondValue: ${secondValue}`);
-      console.log(`operatorToggled: ${operatorToggled}`);
-      console.log(`result: ${result}`)
-      console.log(`displayOperation: ${displayOperation}`)
+  values.pop();
+  if(!operatorToggled){
+    firstValue = firstValue.slice(0, -1);
+    handleDisplay();
+  }
+  if(operatorToggled){
+  displayOperation = displayOperation
+    .map((i, index) => (index === displayOperation.length -1)? 
+    i.slice(0, -1): i)
+  if(displayOperation[displayOperation.length -1] === ''){
+    displayOperation.pop()
+  }
+  secondValue = secondValue.slice(0, -1);
+  handleValues();  
+  handleDisplay();
+  }
 }
 
 window.addEventListener('keydown', function(evt){

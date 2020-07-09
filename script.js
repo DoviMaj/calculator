@@ -15,6 +15,10 @@ function multiply (a, b) {
 		return a * b
 }
 
+function porcentage(a){
+    return a/100
+}
+
 
 
 let result = '';
@@ -28,7 +32,7 @@ let dotToggled = false;
 
 function handleOperator(op){
   return ((op === '+') ? add : (op === '-') ? subtract : 
-  (op === '÷') ? divide : (op === 'x') ? multiply : null)
+  (op === '÷') ? divide : (op === 'x') ? multiply : (op === '%') ? porcentage: null)
 }
 
 let obj = {};
@@ -44,7 +48,12 @@ function handleValues(){
 
 
 function operator(operator, a, b){
-  result = Number(operator(a, b));
+  if(!b){
+    result = Number(operator(a));
+  }
+  else{
+    result = Number(operator(a, b));
+  }
   return result
 }
 
@@ -55,27 +64,26 @@ function handleDisplay(){
   displayResult.innerHTML = result;
 }
 
-
 function handleOperatorInput(value){
   if(result === ''){
-        operatorToggled = !operatorToggled;
-      }
-      if(operatorToggled && result !== ''){
-        firstValue = result;
-        secondValue = ''
-        //result = ''
-      }
-      operatorValue = value;
-      displayOperation.push(operatorValue);
-      values = [];
-      handleDisplay();
-      console.log(operatorValue);
-      console.log(`values: ${values}`);
-      console.log(`firstValue: ${firstValue}`);
-      console.log(`secondValue: ${secondValue}`);
-      console.log(`operatorToggled: ${operatorToggled}`);
-      console.log(`result: ${result}`)
-      console.log(`displayOperation: ${displayOperation}`)
+    operatorToggled = !operatorToggled;
+  }
+  operatorValue = value;
+  displayOperation.push(operatorValue);
+  if(value === '%'){
+    handleOperator()
+    handleValues()
+    operatorValue = 'x'
+    displayOperation.push('x')
+  }
+  values = [];
+  handleDisplay();
+  console.log(`values: ${values}`);
+  console.log(`firstValue: ${firstValue}`);
+  console.log(`secondValue: ${secondValue}`)
+  console.log(`operatorToggled: ${operatorToggled}`);
+  console.log(`result: ${result}`)
+  console.log(`displayOperation: ${displayOperation}`)
 }
 
 function handleNumberInput(inputValue){
@@ -91,7 +99,6 @@ function handleNumberInput(inputValue){
     secondValue = values.reduce((a, b) => a + b);
     if(!(/^[0-9]*$/.test(displayOperation[displayOperation.length -2])) 
     && (/^[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-      console.log('hi')
       displayOperation.pop()
     }
     if(displayOperation[displayOperation.length - 1].includes('.')){
@@ -113,27 +120,17 @@ function handleNumberInput(inputValue){
 let ul = document.querySelector('ul');
 ul.childNodes.forEach((li) => {
   li.addEventListener('mousedown', (evt) =>{
+    if(li.id === 'negative'){
+      handleNegative();
+    }
     if(li.id === 'number'){
-     handleNumberInput(li.innerHTML)
+     handleNumberInput(li.innerHTML);
     }
     if(li.id === 'operator' && (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-      handleOperatorInput(li.innerHTML)
+      handleOperatorInput(li.innerHTML);
     }  
     if(li.id === 'clear'){
-      displayOperation = [];
-      values = [];
-      operatorToggled = false;
-      operatorValue = '';
-      firstValue = '';
-      secondValue = '';
-      result = '';
-      handleDisplay();
-      console.log(`values: ${values}`)
-      console.log(`firstValue: ${firstValue}`);
-      console.log(`secondValue: ${secondValue}`);
-      console.log(`operatorToggled: ${operatorToggled}`);
-      console.log(`result: ${result}`)
-      console.log(`displayOperation: ${displayOperation}`)
+      handleClear();
     }
     if(li.id === 'dot'){
       handleDot(li.innerHTML);
@@ -144,6 +141,37 @@ ul.childNodes.forEach((li) => {
   })
 })
 
+function handleNegative(){
+  debugger
+  if(displayOperation[0] !== '-' && !operatorToggled){
+    firstValue = - firstValue;
+    displayOperation.unshift('-')
+  }
+  else{
+    let sv = secondValue.toString().split('').length
+    displayOperation[displayOperation.length - sv] = 
+    - displayOperation[displayOperation.length - sv]
+    secondValue = - secondValue;   
+  }
+  handleDisplay()
+}
+
+function handleClear(){
+  displayOperation = [];
+  values = [];
+  operatorToggled = false;
+  operatorValue = '';
+  firstValue = '';
+  secondValue = '';
+  result = '';
+  handleDisplay();
+  console.log(`values: ${values}`)
+  console.log(`firstValue: ${firstValue}`);
+  console.log(`secondValue: ${secondValue}`);
+  console.log(`operatorToggled: ${operatorToggled}`);
+  console.log(`result: ${result}`)
+  console.log(`displayOperation: ${displayOperation}`)
+}
 function handleDot(value){
   if(!operatorToggled){
     if(!firstValue.includes('.')){
@@ -164,6 +192,9 @@ function handleDot(value){
 }
 
 function handleRemove(){
+  if(displayOperation.length === 1){
+    handleClear()
+  }
    values.pop();
         if(!operatorToggled){
           firstValue = firstValue.slice(0, -1);
@@ -173,6 +204,9 @@ function handleRemove(){
           displayOperation = displayOperation
             .map((i, index) => (index === displayOperation.length -1)? 
                 i.slice(0, -1): i)
+          if(displayOperation[displayOperation.length -1] === ''){
+            displayOperation.pop()
+          }
           secondValue = secondValue.slice(0, -1);
           handleValues();  
           handleDisplay();
@@ -201,13 +235,9 @@ window.addEventListener('keydown', function(evt){
    (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
     handleOperatorInput('x')
   }
-  if(evt.key === '÷' &&
+  if(evt.key === '/' &&
    (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
     handleOperatorInput('÷')
-  }
-  if(evt.key === '=' &&
-  (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-    handleOperatorInput('=')
   }
   if(evt.code === 'Period'){
     handleDot('.')
@@ -228,3 +258,4 @@ window.addEventListener('keydown', function(evt){
 // result inside li (x)
 // allow decimal input (x)
 // support key codes (x)
+// allow operator change ()

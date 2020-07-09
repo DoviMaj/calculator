@@ -2,10 +2,11 @@ h1{
   text-align: center;
   color: #97b0d4;
   text-shadow: 2px 2px 5px #ccc;
+  font-size: 50px;
 }
 html{
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-family: 'Montserrat', 'sans-serif';
 }
 
 ul{
@@ -31,6 +32,8 @@ li{
   border-radius: 6px;
   background-color: #b0c1da;
   cursor: pointer;
+  box-shadow: 2px 1px 10px -5px rgba(50, 50, 50, 0.64);
+  user-select: none;
 }
 li:hover{
   background-color:#d8d8e4 ;
@@ -38,9 +41,12 @@ li:hover{
 }
 
 .display{
+  resize: none;
   background-color: white;
   width: inherit;
   cursor: initial;
+  overflow: hidden;
+  user-select: initial;
 }
 
 .display:hover{
@@ -53,3 +59,7 @@ footer{
   position: relative;
   top: 5px;
 }
+
+.operator{background-color: #CFCCD9 ;}
+
+#result{background-color: #6955a99c;}

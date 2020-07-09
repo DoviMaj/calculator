@@ -1,12 +1,14 @@
 h1{
+  margin-top: 10px;
+  margin-bottom: 30px;
   text-align: center;
-  color: #97b0d4;
-  text-shadow: 2px 2px 5px #ccc;
+  color: purple;
   font-size: 50px;
 }
 html{
   font-size: 18px;
   font-family: 'Montserrat', 'sans-serif';
+  user-select: none;
 }
 
 ul{
@@ -46,20 +48,25 @@ li:hover{
   width: inherit;
   cursor: initial;
   overflow: hidden;
-  user-select: initial;
 }
 
 .display:hover{
   background-color: white ;
   border: 1px solid #aec6d4;
 }
+
+#display{margin-bottom: 10px;}
+
 footer{
   text-align: center;
   color: #97b0d4;
   position: relative;
   top: 5px;
+  font-size: 15px;
 }
 
 .operator{background-color: #CFCCD9 ;}
 
 #result{background-color: #6955a99c;}
+
+a{text-decoration: none; color: purple;}

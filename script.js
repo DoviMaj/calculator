@@ -78,7 +78,7 @@ function handleOperatorInput(value){
       console.log(`displayOperation: ${displayOperation}`)
 }
 
-function handleInput(inputValue){
+function handleNumberInput(inputValue){
   values.push(inputValue);
   if(!operatorToggled){
     firstValue = values.reduce((a, b) => a + b);
@@ -114,7 +114,7 @@ let ul = document.querySelector('ul');
 ul.childNodes.forEach((li) => {
   li.addEventListener('mousedown', (evt) =>{
     if(li.id === 'number'){
-     handleInput(li.innerHTML)
+     handleNumberInput(li.innerHTML)
     }
     if(li.id === 'operator' && (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
       handleOperatorInput(li.innerHTML)
@@ -136,28 +136,32 @@ ul.childNodes.forEach((li) => {
       console.log(`displayOperation: ${displayOperation}`)
     }
     if(li.id === 'dot'){
-      if(!operatorToggled){
-        if(!firstValue.includes('.')){
-          if((firstValue != '')){
-            handleInput(li.innerHTML);
-          }
-        }
-      }
-      if(operatorToggled){
-              debugger
-        if(!secondValue.includes('.')){
-          if((secondValue != '')){
-            displayOperation.pop()
-            handleInput(li.innerHTML);
-          }
-        }
-      }
+      handleDot(li.innerHTML);
     }
     if(li.id === 'remove'){
       handleRemove();   
     }
   })
 })
+
+function handleDot(value){
+  if(!operatorToggled){
+    if(!firstValue.includes('.')){
+      if((firstValue != '')){
+        handleNumberInput(value);
+      }
+    }
+  }
+  if(operatorToggled){
+          debugger
+    if(!secondValue.includes('.')){
+      if((secondValue != '')){
+        displayOperation.pop()
+        handleNumberInput(value);
+      }
+    }
+  }
+}
 
 function handleRemove(){
    values.pop();
@@ -189,6 +193,31 @@ window.addEventListener('keydown', function(evt){
    (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
     handleOperatorInput('+')
   }
+  if(evt.key === '-' &&
+   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    handleOperatorInput('-')
+  }
+  if(evt.key === 'x' &&
+   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    handleOperatorInput('x')
+  }
+  if(evt.key === '÷' &&
+   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    handleOperatorInput('÷')
+  }
+  if(evt.key === '=' &&
+  (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    handleOperatorInput('=')
+  }
+  if(evt.code === 'Period'){
+    handleDot('.')
+  }
+  if(evt.code === 'Digit1' || evt.code === 'Digit2' || evt.code === 'Digit3' 
+  ||evt.code === 'Digit4' ||evt.code === 'Digit5' ||evt.code === 'Digit6'
+   ||evt.code === 'Digit7' || evt.code === 'Digit8' ||
+  evt.code === 'Digit9' ||evt.code === 'Digit0'){
+    handleNumberInput(evt.code.substring(5))
+  }
 })
 
 
@@ -197,5 +226,5 @@ window.addEventListener('keydown', function(evt){
 // store value of clicked element in array (x)
 // when clicked on result run the operator with the values (x)
 // result inside li (x)
-// allow decimal input ()
-// support key codes ()
+// allow decimal input (x)
+// support key codes (x)

@@ -10,7 +10,6 @@ function divide(a, b){
   return a/b;
 }
 
-
 function multiply (a, b) {
 		return a * b
 }
@@ -18,8 +17,6 @@ function multiply (a, b) {
 function porcentage(a){
     return a/100
 }
-
-
 
 let result = '';
 let displayOperation = [];
@@ -44,8 +41,6 @@ function handleValues(){
   } 
   operator(obj.operator, obj.a, obj.b);
 }
-
-
 
 function operator(operator, a, b){
   if(!b){
@@ -90,12 +85,14 @@ function handleNumberInput(inputValue){
     }
   }
   else{
-    secondValue = values.reduce((a, b) => a + b);
-    if(!(/^[0-9]*$/.test(displayOperation[displayOperation.length -2])) 
-    && (/^[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    let lastAddedIsANumber = (/^[0-9]*$/.test(displayOperation[displayOperation.length -1])) 
+    let beforeLastAddedIsntNumber = !(/^[0-9]*$/.test(displayOperation[displayOperation.length -2]))
+    let lastAddedIsDot = displayOperation[displayOperation.length - 1].includes('.');
+    secondValue = values.reduce((a, b) => a + b);    
+    if(beforeLastAddedIsntNumber && lastAddedIsANumber){
       displayOperation.pop()
     }
-    if(displayOperation[displayOperation.length - 1].includes('.')){
+    if(lastAddedIsDot){
       displayOperation.pop()
     }
     displayOperation.push(secondValue);
@@ -106,14 +103,15 @@ function handleNumberInput(inputValue){
 
 let ul = document.querySelector('ul');
 ul.childNodes.forEach((li) => {
-  li.addEventListener('mousedown', (evt) =>{
+  li.addEventListener('click', (evt) =>{
     if(li.id === 'negative'){
       handleNegative();
     }
     if(li.id === 'number'){
      handleNumberInput(li.innerHTML);
     }
-    if(li.id === 'operator' && (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
+    let lastAddedIsANumber = (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))
+    if(li.id === 'operator' && lastAddedIsANumber){
       handleOperatorInput(li.innerHTML);
     }  
     if(li.id === 'clear'){
@@ -134,9 +132,8 @@ function handleNegative(){
     displayOperation.unshift('-')
   }
   else{
-    let sv = secondValue.toString().split('').length
-    displayOperation[displayOperation.length - sv] = 
-    - displayOperation[displayOperation.length - sv]
+    let sv = secondValue.toString().split('').length;
+    displayOperation[displayOperation.length - sv] =  - displayOperation[displayOperation.length - sv];
     secondValue = - secondValue;   
   }
   handleDisplay()
@@ -181,15 +178,15 @@ function handleRemove(){
     handleDisplay();
   }
   if(operatorToggled){
-  displayOperation = displayOperation
-    .map((i, index) => (index === displayOperation.length -1)? 
-    i.slice(0, -1): i)
-  if(displayOperation[displayOperation.length -1] === ''){
-    displayOperation.pop()
-  }
-  secondValue = secondValue.slice(0, -1);
-  handleValues();  
-  handleDisplay();
+    displayOperation = displayOperation
+      .map((i, index) => (index === displayOperation.length -1)? 
+      i.slice(0, -1): i)
+    if(displayOperation[displayOperation.length -1] === ''){
+      displayOperation.pop()
+    }
+    secondValue = secondValue.slice(0, -1);
+    handleValues();  
+    handleDisplay();
   }
 }
 
@@ -197,21 +194,20 @@ window.addEventListener('keydown', function(evt){
   if(evt.code === 'Backspace'){
     handleRemove()
   }
-  if(evt.key === '+' &&
-   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-    handleOperatorInput('+')
-  }
-  if(evt.key === '-' &&
-   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-    handleOperatorInput('-')
-  }
-  if(evt.key === 'x' &&
-   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-    handleOperatorInput('x')
-  }
-  if(evt.key === '/' &&
-   (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))){
-    handleOperatorInput('÷')
+  let lastAddedIsntOperator = (/^[0-9]*\.?[0-9]*$/.test(displayOperation[displayOperation.length -1]))
+  if(lastAddedIsntOperator){
+    if(evt.key === '+'){
+      handleOperatorInput('+')
+    }
+    if(evt.key === '-'){
+      handleOperatorInput('-')
+    }
+    if(evt.key === 'x'){
+      handleOperatorInput('x')
+    }
+    if(evt.key === '/'){
+      handleOperatorInput('÷')
+    }
   }
   if(evt.code === 'Period'){
     handleDot('.')
@@ -224,12 +220,3 @@ window.addEventListener('keydown', function(evt){
   }
 })
 
-
-// add click event listener to each number (x)
-// console.log value of innerHtml (x)
-// store value of clicked element in array (x)
-// when clicked on result run the operator with the values (x)
-// result inside li (x)
-// allow decimal input (x)
-// support key codes (x)
-// allow operator change ()
